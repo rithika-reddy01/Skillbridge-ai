@@ -479,73 +479,7 @@ function TestimonialsSection() {
   );
 }
 
-function PricingTeaser() {
-  return (
-    <section className="py-24 px-6">
-      <div className="mx-auto max-w-5xl">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-accent mb-4">
-            <TrendingUp className="size-3.5" /> Pricing
-          </div>
-          <h2 className="font-display text-4xl md:text-5xl font-semibold tracking-tight">
-            Free for students. Always.
-          </h2>
-        </div>
-        <div className="grid md:grid-cols-2 gap-4">
-          <Card className="p-8 bg-card/60 border-border">
-            <div className="text-xs uppercase tracking-widest text-muted-foreground">Student</div>
-            <div className="mt-2 font-display text-4xl font-semibold">Free</div>
-            <p className="mt-2 text-sm text-muted-foreground">Everything you need to land your first internship.</p>
-            <ul className="mt-6 space-y-2 text-sm">
-              {[
-                "Career recommendations",
-                "Skill gap analyzer",
-                "Personalized roadmaps",
-                "Resume ATS analysis",
-                "Internship feed",
-                "AI mentor (50 msg/day)",
-              ].map((x) => (
-                <li key={x} className="flex items-center gap-2">
-                  <CheckCircle2 className="size-4 text-success" /> {x}
-                </li>
-              ))}
-            </ul>
-            <Link to="/signup" className="block mt-6">
-              <Button className="w-full bg-gradient-brand text-primary-foreground border-0">Get started</Button>
-            </Link>
-          </Card>
-          <Card className="p-8 bg-card/40 border-primary/30 glass relative">
-            <div className="absolute -top-3 right-6 text-[10px] uppercase tracking-widest bg-gradient-brand text-primary-foreground px-2 py-1 rounded-full">
-              Coming soon
-            </div>
-            <div className="text-xs uppercase tracking-widest text-accent">Pro</div>
-            <div className="mt-2 font-display text-4xl font-semibold">$9<span className="text-base text-muted-foreground">/mo</span></div>
-            <p className="mt-2 text-sm text-muted-foreground">For serious career switchers and graduating seniors.</p>
-            <ul className="mt-6 space-y-2 text-sm">
-              {[
-                "Everything in Student",
-                "Unlimited resume rewrites",
-                "AI cover letter generator",
-                "Interview prep simulator",
-                "Priority job matches",
-                "Unlimited AI mentor",
-              ].map((x) => (
-                <li key={x} className="flex items-center gap-2">
-                  <CheckCircle2 className="size-4 text-accent" /> {x}
-                </li>
-              ))}
-            </ul>
-            <Button variant="outline" className="w-full mt-6 border-border" disabled>
-              Notify me
-            </Button>
-          </Card>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function FAQSection() {
+// pricing removed
   return (
     <section className="py-24 px-6">
       <div className="mx-auto max-w-3xl">
