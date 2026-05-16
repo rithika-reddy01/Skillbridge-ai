@@ -133,7 +133,6 @@ export default function LandingPage() {
       <FeaturesSection />
       <RoadmapPreview />
       <TestimonialsSection />
-      <PricingTeaser />
       <FAQSection />
       <CTABand />
       <Footer />
