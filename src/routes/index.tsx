@@ -479,7 +479,7 @@ function TestimonialsSection() {
   );
 }
 
-// pricing removed
+function FAQSection() {
   return (
     <section className="py-24 px-6">
       <div className="mx-auto max-w-3xl">
