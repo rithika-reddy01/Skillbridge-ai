@@ -9,7 +9,7 @@ Full spec in one pass. Mock job dataset (no external job API keys needed). Auth:
 ## Pages & Routes
 
 Public
-- `/` Landing — hero, value prop, animated stats, features grid, roadmap preview, testimonials, pricing teaser, FAQ, footer
+- `/` Landing — hero, value prop, animated stats, features grid, roadmap preview, dashboard preview, footer
 - `/about` — mission, problem, solution, impact, team
 - `/features` — deep dive on each capability
 - `/contact` — form (saved to DB + email via Resend if enabled)
@@ -101,3 +101,22 @@ Seed 60–100 realistic internship/entry-level roles across SWE, Data, Design, M
 - Real external job APIs (mock dataset instead)
 - Payments/Pricing checkout (UI teaser only)
 - Mobile native apps
+
+## Dependencies to add
+
+`bun add html2pdf.js docx file-saver mammoth pdfjs-dist` (+ `@types/file-saver` dev)
+
+## Database
+
+Optional micro-migration for `roadmap_progress (user_id, node_id, completed_at)` with RLS — only if we wire the progress checkbox. Will confirm before running.
+
+## Design / UX
+
+- Reuse existing tokens (`bg-gradient-brand`, `glass`, `aurora`, `glow-ring`) — no new colors.
+- Mobile: tabs collapse to accordion on `<sm`; mindmap falls back to the timeline view on small viewports.
+- Motion: framer-motion fades + score-ring count-up.
+
+## Out of scope
+
+- No payments, no real PDF parsing on server (kept client-side to avoid Worker native-binary limits).
+- No changes to auth, admin, or other dashboard pages.
