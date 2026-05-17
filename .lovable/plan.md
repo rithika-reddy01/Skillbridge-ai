@@ -116,6 +116,13 @@ Optional micro-migration for `roadmap_progress (user_id, node_id, completed_at)`
 - Mobile: tabs collapse to accordion on `<sm`; mindmap falls back to the timeline view on small viewports.
 - Motion: framer-motion fades + score-ring count-up.
 
+## Light / dark mode
+
+- Add a `ThemeProvider` (`src/lib/theme-context.tsx`) that toggles `class="light"`/`class="dark"` on `<html>`, persists to `localStorage`, defaults to system preference, and avoids FOUC via an inline pre-hydration script in `__root.tsx`.
+- Extend `src/styles.css`: current tokens become the `dark` set (default); add a `:root.light { ... }` block with a polished light palette (off-white surfaces, slate text, same primary/accent hues retuned for AA contrast). Re-tune `--gradient-brand`, `--aurora`, glass utilities so they read well on both.
+- Add `Sun`/`Moon` toggle (lucide) in `PublicHeader` and the authenticated sidebar; smooth `transition-colors duration-300` on body.
+- Audit hard-coded color classes — none should remain; everything routes through tokens.
+
 ## Out of scope
 
 - No payments, no real PDF parsing on server (kept client-side to avoid Worker native-binary limits).
