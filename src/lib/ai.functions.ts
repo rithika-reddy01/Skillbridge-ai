@@ -96,19 +96,25 @@ export const analyzeSkillGap = createServerFn({ method: "POST" })
 // ============ Roadmap ============
 export const generateRoadmap = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(z.object({ targetRole: z.string().min(1), level: z.string().default("beginner") }))
+  .inputValidator(z.object({
+    targetRole: z.string().min(1),
+    level: z.string().default("beginner"),
+    skills: z.array(z.string()).default([]),
+    interests: z.array(z.string()).default([]),
+    goals: z.string().default(""),
+  }))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const sys = 'Return ONLY JSON: {"phases":[{"id":string,"title":string,"weeks":number,"description":string,"skills":string[],"resources":[{"title":string,"url":string,"type":"video"|"course"|"article"|"project"}]}],"estimated_weeks":number}. Produce a sequential 6-8 phase roadmap from current level to job-ready.';
-    const userMsg = `Target role: ${data.targetRole}\nStarting level: ${data.level}`;
+    const sys = 'Return ONLY JSON: {"phases":[{"id":string,"title":string,"weeks":number,"description":string,"skills":string[],"resources":[{"title":string,"url":string,"type":"video"|"course"|"article"|"project"}],"certifications":string[],"projects":string[],"internships":string[]}],"estimated_weeks":number,"target_jobs":string[]}. Personalize using the student\'s existing skills, interests, and goals. Produce a 5-7 phase roadmap from current level to job-ready, each with curated courses, optional certifications, hands-on capstone project ideas, and matched internship/role suggestions.';
+    const userMsg = `Target role: ${data.targetRole}\nStarting level: ${data.level}\nCurrent skills: ${data.skills.join(", ") || "none"}\nInterests: ${data.interests.join(", ") || "general"}\nGoals: ${data.goals || "land first role"}`;
     const raw = await callAI({ system: sys, user: userMsg, expectJson: true });
-    const parsed = parseJson<{ phases: Array<{ id: string; title: string; weeks: number; description: string; skills: string[]; resources: Array<{ title: string; url: string; type: string }> }>; estimated_weeks: number }>(raw);
+    const parsed = parseJson<{ phases: Array<{ id: string; title: string; weeks: number; description: string; skills: string[]; resources: Array<{ title: string; url: string; type: string }>; certifications?: string[]; projects?: string[]; internships?: string[] }>; estimated_weeks: number; target_jobs?: string[] }>(raw);
 
-    const nodes = parsed.phases.map((p, i) => ({ id: p.id || `n${i}`, position: { x: 100 + (i % 3) * 280, y: 80 + Math.floor(i / 3) * 200 }, data: { label: p.title, weeks: p.weeks, description: p.description, skills: p.skills, resources: p.resources }, type: "default" }));
+    const nodes = parsed.phases.map((p, i) => ({ id: p.id || `n${i}`, position: { x: 100 + (i % 3) * 280, y: 80 + Math.floor(i / 3) * 200 }, data: { label: p.title, weeks: p.weeks, description: p.description, skills: p.skills, resources: p.resources, certifications: p.certifications ?? [], projects: p.projects ?? [], internships: p.internships ?? [] }, type: "default" }));
     const edges = parsed.phases.slice(0, -1).map((p, i) => ({ id: `e${i}`, source: p.id || `n${i}`, target: parsed.phases[i + 1].id || `n${i + 1}` }));
 
     await supabase.from("roadmaps").insert({ user_id: userId, target_role: data.targetRole, nodes, edges, estimated_weeks: parsed.estimated_weeks });
-    return { phases: parsed.phases, estimated_weeks: parsed.estimated_weeks };
+    return { phases: parsed.phases, estimated_weeks: parsed.estimated_weeks, target_jobs: parsed.target_jobs ?? [] };
   });
 
 // ============ Resume Analyzer ============
