@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ThemeToggle } from "@/components/site/ThemeToggle";
 import {
   Accordion,
   AccordionContent,
@@ -83,26 +85,7 @@ const STATS = [
   { value: "<60s", label: "to your first roadmap" },
 ];
 
-const TESTIMONIALS = [
-  {
-    quote:
-      "SkillBridge gave me a clear path from confused freshman to landing my first SWE internship at a YC startup.",
-    name: "Aanya R.",
-    role: "CS Sophomore, BITS Pilani",
-  },
-  {
-    quote:
-      "The resume analyzer caught keywords I'd been missing for months. My callback rate doubled.",
-    name: "Marcus T.",
-    role: "Information Systems, NYU",
-  },
-  {
-    quote:
-      "Felt like having a senior mentor on call. The roadmap broke ML into something actually doable.",
-    name: "Priya S.",
-    role: "Data Science, IIT Bombay",
-  },
-];
+// (Removed testimonials block — replaced by deep-dive feature spotlights below.)
 
 const FAQS = [
   {
@@ -132,7 +115,8 @@ export default function LandingPage() {
       <StatsBand />
       <FeaturesSection />
       <RoadmapPreview />
-      <TestimonialsSection />
+      <ResumeBuilderSpotlight />
+      <RoadmapSpotlight />
       <FAQSection />
       <CTABand />
       <Footer />
