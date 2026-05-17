@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
+import { ThemeToggle } from "@/components/site/ThemeToggle";
 
 export function PublicHeader() {
   const { isAuthenticated } = useAuth();
@@ -22,6 +23,7 @@ export function PublicHeader() {
           <Link to="/contact" className="hover:text-foreground transition">Contact</Link>
         </nav>
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           {isAuthenticated ? (
             <Link to="/dashboard">
               <Button size="sm" className="bg-gradient-brand text-primary-foreground border-0">Open dashboard</Button>
