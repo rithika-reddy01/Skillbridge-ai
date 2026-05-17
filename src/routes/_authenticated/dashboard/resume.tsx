@@ -46,19 +46,8 @@ function ResumePage() {
         const { value } = await mammoth.extractRawText({ arrayBuffer: buf });
         setText(value);
       } else if (ext === "pdf") {
-        const pdfjs: typeof import("pdfjs-dist") = await import(/* @vite-ignore */ "pdfjs-dist");
-        // worker setup via CDN for browser
-        (pdfjs as unknown as { GlobalWorkerOptions: { workerSrc: string } }).GlobalWorkerOptions.workerSrc =
-          "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs";
-        const buf = await f.arrayBuffer();
-        const pdf = await pdfjs.getDocument({ data: buf }).promise;
-        let out = "";
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const content = await page.getTextContent();
-          out += content.items.map((it) => ("str" in it ? it.str : "")).join(" ") + "\n";
-        }
-        setText(out.trim());
+        toast.error("PDFs aren't supported — paste the text or upload .docx/.txt");
+        return;
       } else {
         setText(await f.text());
       }
@@ -124,8 +113,8 @@ function ResumePage() {
                 <Input value={role} onChange={(e) => setRole(e.target.value)} className="mt-1.5" />
               </div>
               <div>
-                <Label>Upload .pdf, .docx, .txt</Label>
-                <Input type="file" accept=".txt,.md,.pdf,.docx" className="mt-1.5" onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])} />
+                <Label>Upload .docx or .txt</Label>
+                <Input type="file" accept=".txt,.md,.docx" className="mt-1.5" onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])} />
               </div>
             </div>
             <Label>Resume text {fileName && <span className="text-muted-foreground text-xs ml-2">{fileName} · {text.length.toLocaleString()} chars</span>}</Label>
