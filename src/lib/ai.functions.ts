@@ -130,6 +130,33 @@ export const analyzeResume = createServerFn({ method: "POST" })
     return parsed;
   });
 
+// ============ Resume Rewriter (full rewrite for export) ============
+export const rewriteResume = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ resumeText: z.string().min(50), targetRole: z.string().default("Software Engineer") }))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const sys =
+      'You are an elite resume writer. Rewrite the candidate\'s resume to be ATS-optimized for the target role. Return ONLY JSON: {"name":string,"headline":string,"contact":{"email":string,"phone":string,"location":string,"links":string[]},"summary":string,"skills":string[],"experience":[{"company":string,"role":string,"location":string,"start":string,"end":string,"bullets":string[]}],"projects":[{"name":string,"summary":string,"bullets":string[]}],"education":[{"school":string,"degree":string,"start":string,"end":string,"details":string}],"certifications":string[]}. Use punchy quantified bullets. Pull info ONLY from the source resume — do not invent facts. If a field is missing, leave the string empty or array empty.';
+    const userMsg = `Target role: ${data.targetRole}\n\nOriginal resume:\n${data.resumeText.slice(0, 8000)}`;
+    const raw = await callAI({ system: sys, user: userMsg, expectJson: true });
+    const parsed = parseJson<ResumeDoc>(raw);
+    await supabase.from("ai_logs").insert({ user_id: userId, feature: "rewriteResume", model: MODEL, success: true });
+    return parsed;
+  });
+
+export type ResumeDoc = {
+  name: string;
+  headline: string;
+  contact: { email: string; phone: string; location: string; links: string[] };
+  summary: string;
+  skills: string[];
+  experience: Array<{ company: string; role: string; location: string; start: string; end: string; bullets: string[] }>;
+  projects: Array<{ name: string; summary: string; bullets: string[] }>;
+  education: Array<{ school: string; degree: string; start: string; end: string; details: string }>;
+  certifications: string[];
+};
+
 // ============ Mentor Chat ============
 export const mentorChat = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
