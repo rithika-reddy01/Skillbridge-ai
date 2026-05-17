@@ -142,6 +142,7 @@ function Header() {
           <Link to="/contact" className="hover:text-foreground transition">Contact</Link>
         </nav>
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <Link to="/login">
             <Button variant="ghost" size="sm">Sign in</Button>
           </Link>
@@ -425,41 +426,235 @@ function RoadmapPreview() {
   );
 }
 
-function TestimonialsSection() {
+function ResumeBuilderSpotlight() {
   return (
-    <section className="py-24 px-6">
-      <div className="mx-auto max-w-6xl">
-        <div className="text-center mb-12">
+    <section className="py-24 px-6 relative">
+      <div className="mx-auto max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-accent mb-4">
+            <FileText className="size-3.5" /> Premium ATS Resume Builder
+          </div>
           <h2 className="font-display text-4xl md:text-5xl font-semibold tracking-tight">
-            Students are shipping their careers.
+            Beat the bots. <span className="text-gradient">Land the interview.</span>
           </h2>
-        </div>
-        <div className="grid md:grid-cols-3 gap-4">
-          {TESTIMONIALS.map((t, i) => (
-            <motion.div
-              key={t.name}
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-            >
-              <Card className="p-6 bg-card/60 border-border h-full">
-                <p className="text-sm leading-relaxed">"{t.quote}"</p>
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="size-9 rounded-full bg-gradient-brand grid place-items-center text-primary-foreground font-display text-sm">
-                    {t.name[0]}
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium">{t.name}</div>
-                    <div className="text-xs text-muted-foreground">{t.role}</div>
-                  </div>
+          <p className="mt-4 text-muted-foreground text-lg">
+            Upload, paste, or import your resume. Our AI rewrites weak bullets, fixes formatting,
+            injects role-specific keywords, and exports a polished PDF or DOCX.
+          </p>
+          <ul className="mt-6 space-y-3 text-sm">
+            {[
+              "ATS + formatting scores with keyword diff",
+              "AI-rewritten bullets — before vs after",
+              "One-click optimized preview (A4, print-ready)",
+              "Export as PDF or DOCX, recruiter-ready",
+            ].map((b) => (
+              <li key={b} className="flex items-start gap-2.5">
+                <CheckCircle2 className="size-4 text-success shrink-0 mt-0.5" />
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+          <Link to="/signup" className="inline-block mt-8">
+            <Button size="lg" className="bg-gradient-brand text-primary-foreground border-0 h-12 px-6 glow-ring">
+              Build my resume <ArrowRight className="ml-2 size-4" />
+            </Button>
+          </Link>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="relative"
+        >
+          <Card className="p-6 bg-card/70 border-border glass glow-ring relative overflow-hidden">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <div className="text-xs uppercase tracking-widest text-muted-foreground">ATS Score</div>
+                <div className="font-display text-2xl font-semibold mt-1">Frontend Engineer · target</div>
+              </div>
+              <AtsRing value={92} />
+            </div>
+            <div className="grid grid-cols-2 gap-3 mt-4">
+              <div className="p-3 rounded-lg bg-success/10 border border-success/25">
+                <div className="text-[10px] uppercase tracking-widest text-success mb-1.5">Matched</div>
+                <div className="flex flex-wrap gap-1">
+                  {["React", "TypeScript", "Tailwind", "REST"].map((k) => (
+                    <Badge key={k} className="bg-success/15 text-success border-success/25 text-[10px]">{k}</Badge>
+                  ))}
                 </div>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+              </div>
+              <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/25">
+                <div className="text-[10px] uppercase tracking-widest text-destructive mb-1.5">Add these</div>
+                <div className="flex flex-wrap gap-1">
+                  {["Vitest", "CI/CD", "a11y"].map((k) => (
+                    <Badge key={k} className="bg-destructive/15 text-destructive border-destructive/25 text-[10px]">{k}</Badge>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="mt-5 p-4 rounded-lg border border-border bg-background/40">
+              <div className="text-[10px] uppercase tracking-widest text-destructive mb-1">Before</div>
+              <p className="text-xs text-muted-foreground line-through">Worked on a website for the school using React.</p>
+              <div className="text-[10px] uppercase tracking-widest text-success mt-3 mb-1">After</div>
+              <p className="text-xs">
+                Shipped a responsive React/TypeScript student portal serving 4k+ users, raising Lighthouse perf from 62 → 96.
+              </p>
+            </div>
+          </Card>
+        </motion.div>
       </div>
     </section>
+  );
+}
+
+function AtsRing({ value }: { value: number }) {
+  const r = 28;
+  const c = 2 * Math.PI * r;
+  const offset = c - (value / 100) * c;
+  return (
+    <div className="relative size-16">
+      <svg className="size-16 -rotate-90" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r={r} stroke="var(--color-muted)" strokeWidth="6" fill="none" />
+        <motion.circle
+          cx="32" cy="32" r={r} stroke="url(#atsGrad)" strokeWidth="6" strokeLinecap="round" fill="none"
+          strokeDasharray={c}
+          initial={{ strokeDashoffset: c }}
+          whileInView={{ strokeDashoffset: offset }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+        />
+        <defs>
+          <linearGradient id="atsGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="var(--brand)" />
+            <stop offset="100%" stopColor="var(--brand-2)" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <div className="absolute inset-0 grid place-items-center font-display font-semibold text-sm text-gradient">{value}</div>
+    </div>
+  );
+}
+
+function RoadmapSpotlight() {
+  return (
+    <section className="py-24 px-6 relative">
+      <div className="mx-auto max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="order-2 lg:order-1"
+        >
+          <MindmapPreview />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="order-1 lg:order-2"
+        >
+          <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-accent mb-4">
+            <GitBranch className="size-3.5" /> Personalized Roadmap System
+          </div>
+          <h2 className="font-display text-4xl md:text-5xl font-semibold tracking-tight">
+            Every student gets a <span className="text-gradient">mindmap</span>, not a checklist.
+          </h2>
+          <p className="mt-4 text-muted-foreground text-lg">
+            We analyze your skills, interests, and goals — then map a living network of courses,
+            certifications, projects, internships, and jobs to reach them.
+          </p>
+          <ul className="mt-6 grid grid-cols-2 gap-3 text-sm">
+            {[
+              { icon: Compass, label: "Skill-gap analysis" },
+              { icon: Brain, label: "Curated courses" },
+              { icon: CheckCircle2, label: "Certifications" },
+              { icon: Sparkles, label: "Capstone projects" },
+              { icon: Briefcase, label: "Matched internships" },
+              { icon: TrendingUp, label: "Target job roles" },
+            ].map((b) => (
+              <li key={b.label} className="flex items-center gap-2.5 p-3 rounded-lg bg-card/40 border border-border">
+                <b.icon className="size-4 text-accent" /> {b.label}
+              </li>
+            ))}
+          </ul>
+          <Link to="/signup" className="inline-block mt-8">
+            <Button size="lg" className="bg-gradient-brand text-primary-foreground border-0 h-12 px-6 glow-ring">
+              Generate my roadmap <ArrowRight className="ml-2 size-4" />
+            </Button>
+          </Link>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function MindmapPreview() {
+  const branches = [
+    { label: "Skills", angle: -150, color: "var(--brand)" },
+    { label: "Courses", angle: -90, color: "var(--brand-2)" },
+    { label: "Certs", angle: -30, color: "oklch(0.72 0.18 155)" },
+    { label: "Projects", angle: 30, color: "oklch(0.82 0.16 75)" },
+    { label: "Internships", angle: 90, color: "oklch(0.7 0.2 340)" },
+    { label: "Jobs", angle: 150, color: "var(--brand)" },
+  ];
+  const cx = 50, cy = 50, R = 36;
+  return (
+    <Card className="relative aspect-square max-w-md mx-auto bg-card/40 border-border glass overflow-hidden">
+      <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full">
+        <defs>
+          <radialGradient id="mmCenter" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0%" stopColor="var(--brand)" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="var(--brand-2)" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <circle cx={cx} cy={cy} r="30" fill="url(#mmCenter)" />
+        {branches.map((b, i) => {
+          const x = cx + R * Math.cos((b.angle * Math.PI) / 180);
+          const y = cy + R * Math.sin((b.angle * Math.PI) / 180);
+          return (
+            <g key={b.label}>
+              <motion.line
+                x1={cx} y1={cy} x2={x} y2={y} stroke={b.color} strokeWidth="0.5" strokeOpacity="0.5"
+                initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }}
+                viewport={{ once: true }} transition={{ duration: 0.8, delay: i * 0.08 }}
+              />
+              <motion.circle
+                cx={x} cy={y} r="2.5" fill={b.color}
+                initial={{ scale: 0 }} whileInView={{ scale: 1 }}
+                viewport={{ once: true }} transition={{ duration: 0.4, delay: 0.4 + i * 0.08 }}
+              />
+            </g>
+          );
+        })}
+      </svg>
+      {branches.map((b) => {
+        const x = cx + (R + 6) * Math.cos((b.angle * Math.PI) / 180);
+        const y = cy + (R + 6) * Math.sin((b.angle * Math.PI) / 180);
+        return (
+          <div
+            key={b.label}
+            className="absolute -translate-x-1/2 -translate-y-1/2 px-2.5 py-1 rounded-full glass text-[10px] font-display font-medium border border-border"
+            style={{ left: `${x}%`, top: `${y}%` }}
+          >
+            {b.label}
+          </div>
+        );
+      })}
+      <div className="absolute inset-0 grid place-items-center">
+        <div className="size-20 rounded-full bg-gradient-brand grid place-items-center font-display font-semibold text-primary-foreground text-sm glow-ring">
+          You
+        </div>
+      </div>
+    </Card>
   );
 }
 
