@@ -2,6 +2,7 @@ import { createFileRoute, redirect, Outlet, Link, useLocation, useNavigate } fro
 import { useAuth } from "@/lib/auth-context";
 import { Sparkles, LayoutDashboard, User, Brain, Compass, GitBranch, FileText, Briefcase, MessageCircle, LogOut, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/site/ThemeToggle";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -64,7 +65,10 @@ function AuthenticatedLayout() {
           )}
         </nav>
         <div className="border-t border-border pt-4 space-y-2">
-          <div className="px-3 text-xs text-muted-foreground truncate">{user?.email}</div>
+          <div className="flex items-center justify-between gap-2 px-1">
+            <div className="px-2 text-xs text-muted-foreground truncate">{user?.email}</div>
+            <ThemeToggle className="size-8 shrink-0" />
+          </div>
           <Button variant="ghost" size="sm" onClick={() => { signOut().then(() => nav({ to: "/" })); }} className="w-full justify-start text-muted-foreground">
             <LogOut className="size-4 mr-2" /> Sign out
           </Button>
